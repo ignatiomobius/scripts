@@ -1,0 +1,2 @@
+#!/bin/sh
+python until_today.py
