@@ -1,21 +1,21 @@
 function go (){
-  arg1=$1
-  if [ $arg1 == "add" ]
+  if [ $# == "0" ] || [ $1 == "-h" ]
   then
-    echo $2 >> ~/.go_history
-  elif [ $arg1 == "-l" ]
+    echo "Usage: go [(number)] [-l] [-a] [-h] (path)"
+    echo "    (number): cd to stored path with number"
+    echo "    -l: list stored paths"
+    echo "    -a: store new path to navigate"
+    echo "    -h: show this help"
+  elif [ $1 == "-a" ]
+  then
+    echo $2 >> /home/moebius/.go_history
+  elif [ $1 == "-l" ]
   then
     file="/home/moebius/.go_history"
     while read line
     do
       echo $line
     done <"$file"
-  elif [ $arg1 == "help" ]
-  then
-    echo "Usage: go [(number)] [-l] [add] (path)"
-    echo "    (number): cd to stored path with number"
-    echo "    show: list stored paths"
-    echo "    add: store new path to navigate"
   else
     i=1
     file="/home/moebius/.go_history"
