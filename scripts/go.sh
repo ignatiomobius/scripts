@@ -13,9 +13,11 @@ function go (){
   elif [ $1 == "-l" ]
   then
     file="/home/moebius/.go_history"
+    i=1
     while read line
     do
-      echo $line
+      echo $i":"$line
+      i=`expr $i + 1`
     done <"$file"
   elif [ $1 == "-r" ]
   then
