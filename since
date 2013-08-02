@@ -1,2 +1,2 @@
 #!/bin/sh
-python /usr/local/bin/scripts/until_today.py
+python until_today.py
