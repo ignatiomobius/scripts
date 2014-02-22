@@ -1,0 +1,6 @@
+#!/bin/sh
+name="`basename $1 .md`.html"
+echo "" > $name
+echo "<meta charset="utf-8">" > $name
+echo "" >> $name
+markdown $1 >> $name
