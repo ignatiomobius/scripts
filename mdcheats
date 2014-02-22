@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "#, ##, ###    =   headings"
+echo "1., 2., 3.    =   numberings"
+echo "-, +, *       =   bullet points"
+echo "*[word]*      =   italics"
+echo "**[word]**    =   bold"
+echo "~~[word]~     =   strikethrough"
+echo ""
+echo "tables:"
+echo "| [namecolumn] | [nextcolumn] (no closing | needed)"
+echo "|---|:---|---:|:---:  =   : denotes alignement"
+
