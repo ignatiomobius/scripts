@@ -1,0 +1,11 @@
+#!/bin/sh
+if [ $# -ne 1 ]
+then
+    echo "usage: md2html [filename]"
+else
+    name="`basename $1 .md`.html"
+    echo "" > $name
+    echo "<meta charset="utf-8">" > $name
+    echo "" >> $name
+    markdown $1 >> $name
+fi
