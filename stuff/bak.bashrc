@@ -93,11 +93,13 @@ alias mcis="mvn clean install -Dmaven.test.skip=true"
 alias mcios="mvn clean install -Dmaven.test.skip=true -o"
 alias mciee="mvn eclipse:clean clean install eclipse:eclipse"
 alias mcieeo="mvn eclipse:clean clean install eclipse:eclipse -o"
-alias mcieeos="mvn eclipse:clean clean install eclipse:eclipse -o -Dmaven.test.skip=true -o"
+alias mciees="mvn eclipse:clean clean install eclipse:eclipse -Dmaven.test.skip=true"
+alias mcieeos="mvn eclipse:clean clean install eclipse:eclipse -o -Dmaven.test.skip=true"
 alias gph="git push origin HEAD"
 alias gst="git status"
 alias qa="qgit --all &"
 alias gcm="git commit -m"
+alias gca="git commit --amend"
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -108,7 +110,8 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-export PATH=$PATH:/home/moebius/workspace/scripts
+export PATH=$PATH:/home/moebius/scripts
+export PATH=$PATH:/opt/texbin
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -149,4 +152,40 @@ dir="../$dir"
     arg=$(($arg - 1));
   done
 cd $dir #>&/dev/null
+}
+
+function go (){
+  if [ $# == "0" ] || [ $1 == "-h" ]
+  then
+    echo "Usage: go [(number)] [-l] [-a (path)] [-r (number)] [-h]"
+    echo "    (number): cd to stored path with number"
+    echo "    -l: list stored paths"
+    echo "    -a: store new path to navigate"
+    echo "    -r: remove entry stored at given number"
+    echo "    -h: show this help"
+  elif [ $1 == "-a" ]
+  then
+    echo $2 >> /home/moebius/.go_history
+  elif [ $1 == "-l" ]
+  then
+    file="/home/moebius/.go_history"
+    i=1
+    while read line
+    do
+      echo $i":"$line
+      i=`expr $i + 1`
+    done <"$file"
+  elif [ $1 == "-r" ]
+  then
+    sed -i $2'd' /home/moebius/.go_history
+  else
+    i=1
+    file="/home/moebius/.go_history"
+    while read line
+     do
+       lines[$i]="$line"
+       i=`expr $i + 1`
+     done <"$file"
+     cd ${lines[$1]}
+  fi
 }
