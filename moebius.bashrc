@@ -14,7 +14,16 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
 
+# After each command, save and reload history
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+export HISTSIZE=5000
+export HISTFILESIZE=5000
+
+# tmux hack http://askubuntu.com/questions/51132/gnome-open-raises-this-error-when-run-from-inside-tmux
+# also check ~.tmux.conf for set-option -g update-environment "DBUS_SESSION_BUS_ADDRESS DISPLAY SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITY"
+# export DBUS_SESSION_BUS_ADDRESS=$(tr '\0' '\n' < /proc/$(pgrep -U $(whoami) gnome-session)/environ|grep ^DBUS_SESSION_BUS_ADDRESS=|cut -d= -f2-)
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -56,7 +65,7 @@ else
 fi
 unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
+# If this is an xterm set the 	 to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
@@ -77,30 +86,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-#alias ll='ls -l'
-#alias la='ls -A'
-#alias l='ls -CF'
-alias lsg='ls | grep'
-# exit typo alias
-alias eixt="exit"
-# some mvn aliases
-alias mci="mvn clean install"
-alias mcio="mvn clean install -o"
-alias mee="mvn eclipse:clean eclipse:eclipse"
-alias meeo="mvn eclipse:clean eclipse:eclipse -o"
-alias mcis="mvn clean install -Dmaven.test.skip=true"
-alias mcios="mvn clean install -Dmaven.test.skip=true -o"
-alias mciee="mvn eclipse:clean clean install eclipse:eclipse"
-alias mcieeo="mvn eclipse:clean clean install eclipse:eclipse -o"
-alias mciees="mvn eclipse:clean clean install eclipse:eclipse -Dmaven.test.skip=true"
-alias mcieeos="mvn eclipse:clean clean install eclipse:eclipse -o -Dmaven.test.skip=true"
-alias gph="git push origin HEAD"
-alias gst="git status"
-alias qa="qgit --all &"
-alias gcm="git commit -m"
-alias gca="git commit --amend"
-
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
@@ -111,7 +96,9 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 export PATH=$PATH:/home/moebius/scripts
-export PATH=$PATH:/opt/texbin
+#export PATH=$PATH:/opt/texbin
+export PATH=$PATH:/opt/java/jdk1.7.0_75/bin
+export JAVA_HOME=/opt/java/jdk1.7.0_75/
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -119,7 +106,6 @@ export PATH=$PATH:/opt/texbin
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
-
 
 ## git-branch
 function set_git_branch {
@@ -144,6 +130,13 @@ if [ "$EUID" != "0" ]; then
 	export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w\[\033[0;33m\]$(set_git_branch)\[\033[01;34m\] \$\[\033[0m\] '
 fi
 
+utf8()
+{
+    iconv -f ISO-8859-1 -t UTF-8 $1 > $1.tmp
+    rm $1
+    mv $1.tmp $1
+}
+
 function .. (){
   local arg=${1:-1};
   local dir=""
@@ -159,16 +152,22 @@ function go (){
   then
     echo "Usage: go [(number)] [-l] [-a (path)] [-r (number)] [-h]"
     echo "    (number): cd to stored path with number"
-    echo "    -l: list stored paths"
+    echo "    -l: list stored bookmarks"
     echo "    -a: store new path to navigate"
-    echo "    -r: remove entry stored at given number"
+    echo "    -s: save current location as bookmark"
+    echo "    -r: remove bookmark at given number"
     echo "    -h: show this help"
   elif [ $1 == "-a" ]
   then
-    echo $2 >> /home/moebius/.go_history
+    echo $2 >> $HOME/.go_history
+    echo `wc -l < $HOME//.go_history`
+  elif [ $1 == '-s'  ]
+  then
+    echo `pwd` >> $HOME/.go_history
+    echo `wc -l < $HOME//.go_history`
   elif [ $1 == "-l" ]
   then
-    file="/home/moebius/.go_history"
+    file="$HOME/.go_history"
     i=1
     while read line
     do
@@ -177,10 +176,13 @@ function go (){
     done <"$file"
   elif [ $1 == "-r" ]
   then
-    sed -i $2'd' /home/moebius/.go_history
+    sed -i $2'd' $HOME/.go_history
+  elif [ $1 == "0" ]
+  then
+    :
   else
     i=1
-    file="/home/moebius/.go_history"
+    file="$HOME/.go_history"
     while read line
      do
        lines[$i]="$line"
@@ -188,4 +190,25 @@ function go (){
      done <"$file"
      cd ${lines[$1]}
   fi
+}
+
+fn() {
+    if test "$#" = 2; then
+        find . -iname $1 | head -n $2 | tail -n 1
+    elif test "$#" = 1;
+    then
+        find . -iname $1 | head -n 1
+    else
+        find . | head -n 1
+    fi
+}
+
+
+
+h() {
+    echo "Custom Commands:"
+    echo "  .. {n}          ->  go up 1 or n directories"
+    echo "  go {n}          ->  go to bookmarked location n"
+    echo "  fn (expr) (n)   ->  find expr in current directory and return the n-th result (default: 1st)"
+    echo "  ma              ->  show (m)y (a)liases, i.e. mostly short-hands for common commands"
 }

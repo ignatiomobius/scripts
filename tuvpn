@@ -1,2 +1,0 @@
-#!/bin/sh
-sudo vpnc-connect ~/tu.conf
