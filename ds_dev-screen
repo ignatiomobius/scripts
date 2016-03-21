@@ -1,0 +1,12 @@
+#!/bin/sh
+tmux new-session -d -s "dev-screen"
+tmux split-window
+tmux select-window -t 0
+tmux split-window -h
+tmux select-window -t 0
+tmux split-window -h
+tmux select-window -t 0
+
+tmux send-keys 'go 1' 'C-m'
+
+tmux attach-session -t dev-screen

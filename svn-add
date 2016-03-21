@@ -1,0 +1,2 @@
+#!/bin/sh
+svn st | grep '^\?' | sed 's/^\? *//' | xargs -I% svn add %

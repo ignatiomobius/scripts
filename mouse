@@ -1,0 +1,2 @@
+#!/bin/sh
+xinput --disable 13 && xinput --enable 13

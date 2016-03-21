@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ "$#" -ne 2 ]; then
+xrandr --output eDP1 --scale 1x1 --mode 3200x1800 --fb 5920x1800 --pos 0x0
+xrandr --output DP1 --scale 1.5x1.5 --mode 1680x1050 --pos 3300x225
+else
+xrandr --output eDP1 --scale 1x1 --mode 3200x1800 --fb 5920x1800 --pos 0x0
+xrandr --output DP1 --scale $1x$2 --mode 1680x1050 --pos 3300x225
+fi

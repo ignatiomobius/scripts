@@ -1,0 +1,3 @@
+#!/bin/sh
+source /home/moebius/.bashrc
+/home/moebius/idea/bin/idea.sh
