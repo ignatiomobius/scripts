@@ -1,0 +1,4 @@
+#!/bin/sh
+for dest in $(<remotes); do
+      scp ~/.bash_aliases ~/.bash_functions ${dest}:
+done
