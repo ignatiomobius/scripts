@@ -1,0 +1,5 @@
+#!/bin/sh
+# or try pdftk <input file> output <output file name> compress
+# or e.g. https://smallpdf.com/compress-pdf
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -dNOPAUSE -dQUIET -dBATCH -sOutputFile=$2 $1
+
