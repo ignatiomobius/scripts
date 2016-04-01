@@ -1,1 +1,85 @@
-/home/moebius/.bashrc
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# examples /usr/share/doc/bash/examples/startup-files (package bash-doc)
+
+if [ -f ~/.bash_functions ]; then
+    . ~/.bash_functions
+fi
+
+# See /usr/share/doc/bash-doc/examples (bash-doc package)
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# Env settings that get changed too often
+if [ -f ~/.bash_env ]; then
+    . ~/.bash_env
+fi
+
+export PATH=$PATH:/home/moebius/gradle/bin
+export PATH=$PATH:/home/moebius/scripts
+export PATH=$PATH:/opt/java/jdk1.7.0_75/bin
+
+export JAVA_HOME=/opt/java/jdk1.7.0_75/
+export GRADLE_HOME=/home/moebius/gradle
+
+# name the shell (tab) with the current counter
+# then increase a counter every time a shell is opened
+curtitle=`xprop -id $WINDOWID WM_NAME|awk '{print $3}'`
+if [ $curtitle = "\"Terminal\"" ]
+then
+    if [ -e /tmp/*.moebius.counter ]
+    then
+        i=`basename /tmp/*.moebius.counter .moebius.counter`
+        i=`expr $i + 1`
+        xtitle $i
+        rm /tmp/*.moebius.counter
+        touch /tmp/$i.moebius.counter
+    else
+        xtitle 1
+        touch /tmp/1.moebius.counter
+    fi
+fi
+
+# don't put duplicate lines in the history. See bash(1) for more options
+# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
+HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
+# ... or force ignoredups and ignorespace
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# After each command, save and reload history
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+export HISTSIZE=5000
+export HISTFILESIZE=5000
+
+# tmux hack http://askubuntu.com/questions/51132/gnome-open-raises-this-error-when-run-from-inside-tmux
+# also check ~.tmux.conf for set-option -g update-environment "DBUS_SESSION_BUS_ADDRESS DISPLAY SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITY"
+# export DBUS_SESSION_BUS_ADDRESS=$(tr '\0' '\n' < /proc/$(pgrep -U $(whoami) gnome-session)/environ|grep ^DBUS_SESSION_BUS_ADDRESS=|cut -d= -f2-)
+
+## git-branch
+function set_git_branch {
+	git status > /dev/null 2>&1
+	if [ $? -lt 128 ]; then
+		local branch=$(git branch -a | grep "^\*" | sed s/"^\* "//)
+		if [ -n "$branch" ]; then
+			if [ "$branch" = "(no branch)" ]; then
+				branch=$(git log -1 | head -n1 | cut -c 8-15)
+			fi
+			local lines=$(git status | grep -c "working directory clean")
+			if [ $lines -eq 0 ]; then
+				echo "[${branch}]*"
+			else
+				echo "[${branch}]"
+			fi
+		fi
+	fi
+}
+
+if [ "$EUID" != "0" ]; then
+	export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w\[\033[0;33m\]$(set_git_branch)\[\033[01;34m\] \$\[\033[0m\] '
+fi
+
