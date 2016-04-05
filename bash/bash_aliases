@@ -17,7 +17,8 @@ alias s='scale-display'
 alias m='mkdir'
 
 # ls
-alias l='ls -1 -A'
+alias l='ls -1'
+alias la='ls-l -A'
 alias ll='ls -1 -A | less'
 alias lsg='ls | grep'
 alias ag='grep -rnw . -e'
