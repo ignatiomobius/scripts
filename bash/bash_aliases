@@ -16,6 +16,10 @@ alias u='uptime'
 alias s='scale-display'
 alias m='mkdir'
 
+alias tview='tar -ztvf'
+alias tarchive='tar -cvzf'
+alias textract='tar -xvzf'
+
 # ls
 alias l='ls -1'
 alias la='ls-l -A'

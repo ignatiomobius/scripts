@@ -1,0 +1,6 @@
+alias tdown="sudo service REPLACE_WITH_SERVER_NAME stop"
+alias tremove="sudo rm -rf /opt/REPLACE_WITH_SERVER_NAME/webapps/REPLACE_WITH_PROJECT_NAME*"
+alias tdeploy="sudo cp /home/fwaltersdorfer/REPLACE_WITH_PROJECT_NAME.war /opt/REPLACE_WITH_SERVER_NAME/webapps/ && sudo chown moauser:moauser /opt/REPLACE_WITH_SERVER_NAME/webapps/REPLACE_WITH_PROJECT_NAME.war && sudo chown moauser:moauser /opt/REPLACE_WITH_SERVER_NAME/work/Catalina/localhost/REPLACE_WITH_PROJECT_NAME"
+alias tup="sudo service REPLACE_WITH_SERVER_NAME start"
+alias tall="tdown && tremove && tdeploy && tup"
+
