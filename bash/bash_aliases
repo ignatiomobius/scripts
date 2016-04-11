@@ -48,8 +48,10 @@ alias gb="git branch"
 alias gdel="git branch -D"
 
 #settings
-alias br="vim ~/.bash_functions"
-alias brc="gedit ~/.bash_functions &"
+alias br="vim ~/.bashrc"
+alias bf="vim ~/.bash_functions"
+alias brc="gedit ~/.bashrc &"
+alias brf="gedit ~/.bash_functions &"
 alias ba="vim ~/.bash_aliases"
 alias bu="source ~/.bashrc"
 alias ma="less ~/.bash_aliases"
