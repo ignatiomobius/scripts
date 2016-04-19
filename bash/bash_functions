@@ -83,6 +83,19 @@ ht() {
     echo "tmux list-sessions, tmux attach -t name, tmux kill-session -t name, tmux source-file ~/.tmux.conf"
 }
 
+hf() {
+    echo "psql -h localhost hpcdual-zustellserver  moauser"
+}
+
+notIn(){
+    if test "$#" = 2; then
+        grep -x -f $2 -v $1
+    else
+        echo "  Expected 2 arg (reference file, file to look into), got $#."
+    fi
+
+}
+
 h() {
     echo "Custom Commands:"
     echo "  .. n            ->  go up 1 or n directories"
@@ -91,4 +104,7 @@ h() {
     echo "  d {file}        ->  export given .dia file to png"
     echo "  ma              ->  show (m)y (a)liases, mostly short-hands of common commands"
     echo "  ht              ->  show tmux (un)common commands"
+    echo "  hf              ->  show some commands I never quite remember the ordering"
+    echo "  notIn file otherFile
+                  ->  find lines given by 'file' not in 'otherFile'"
 }
