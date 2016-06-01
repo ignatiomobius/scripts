@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 for dest in $(<~/.machines); do
     scp ~/.bash_aliases ~/.bash_functions ${dest}:
 done
+
+echo "Don't forget the ones after the jumphost(s)"

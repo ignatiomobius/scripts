@@ -1,7 +1,8 @@
 # h = show bash helper commands (e.g., go fn, ma)
 # convenience commands
 alias c='clear'
-alias cl='c;ls'
+alias cls='c;ls'
+alias cl='c;l'
 alias ct='cd; clear'
 alias cg='clear; go'
 alias ci='centerim'
