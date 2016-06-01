@@ -1,5 +1,6 @@
 #!/bin/bash
 for dest in $(<~/.machines); do
+    echo "${dest}:"
     scp ~/.bash_aliases ~/.bash_functions ${dest}:
 done
 
