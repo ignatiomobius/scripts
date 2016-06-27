@@ -89,6 +89,7 @@ hf() {
     echo 'wget "https://webservices.llv.li:9443/persw/services/mitarbeitereZDService/v1" --certificate=llv-test.pem'
     echo "netstat -lntu"
     echo "ssh -L 9443:localhost:9443 moabox"
+    echo "(psql) \o file.txt (enter) query (enter) \o \q"
 }
 
 notIn(){
