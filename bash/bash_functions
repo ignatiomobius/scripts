@@ -90,6 +90,9 @@ hf() {
     echo "netstat -lntu"
     echo "ssh -L 9443:localhost:9443 moabox"
     echo "(psql) \o file.txt (enter) query (enter) \o \q"
+    echo "(self-signed) openssl req -x509 -newkey rsa:2048 -keyout self.key -out self.pem -days 365"
+    echo "(check) openssl x509 -in self.pem -text -noout"
+    echo "(to p12) openssl pkcs12 -export -out self.p12 -inkey self.key -in self.pem"
 }
 
 notIn(){

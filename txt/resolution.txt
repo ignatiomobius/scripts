@@ -1,5 +1,3 @@
-chmod 711 moebius instead of 700 (for sql init script)
-
 high-res
 firefox about:config *pixel
 idea: general font, editor font & terminal font
