@@ -104,6 +104,10 @@ notIn(){
 
 }
 
+ldir(){
+    for i in $(ls -d */); do echo ${i%%/}; done
+}
+
 h() {
     echo "Custom Commands:"
     echo "  .. n            ->  go up 1 or n directories"
@@ -115,4 +119,5 @@ h() {
     echo "  hf              ->  show some commands I never quite remember the ordering"
     echo "  notIn file otherFile
                   ->  find lines given by 'file' not in 'otherFile'"
+    echo " ldir             -> list directories in current dir"
 }
