@@ -1,0 +1,6 @@
+# reload w/ "tmux source-file ~/.tmux.conf"
+selectp -t 0
+splitw
+selectp -t 1
+splitw -h
+selectp -t 0
