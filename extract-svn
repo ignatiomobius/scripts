@@ -1,6 +1,0 @@
-#!/bin/sh
-# $1 = general svn repo url, $2 project name, $3 local folder for new git copy
-svn co $1/$2 
-cd $1
-svn log -q | awk -F '|' '/^r/ {sub("^ ", "", $2); sub(" $", "", $2); print $2" = "$2" <"$2">"}' | sort -u > ../${PWD##*/}-authors
-#git svn clone $1#/$2 --no-metadata -A authors --stdlayout --prefix origin/ $3/$2-git

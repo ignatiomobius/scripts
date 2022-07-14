@@ -1,8 +1,0 @@
-#!/bin/sh
-if test "$#" = 1; then
-    java -jar /home/moebius/plantUML/plantuml.jar $1
-elif test "$#" = 2; then
-    java -jar /home/moebius/plantUML/plantuml.jar $1 $2
-else 
-    echo "  Expected 1 or 2 args [current file] {export option}, got $#."
-fi

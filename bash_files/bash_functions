@@ -1,0 +1,170 @@
+utf8()
+{
+    iconv -f ISO-8859-1 -t UTF-8 $1 > $1.tmp
+    rm $1
+    mv $1.tmp $1
+}
+
+function .. (){
+  local arg=${1:-1};
+  local dir=""
+  while [ $arg -gt 0 ]; do
+dir="../$dir"
+    arg=$(($arg - 1));
+  done
+cd $dir #>&/dev/null
+}
+
+function go (){
+
+  GO_HISTORY=$HOME/.go_history
+  GO_LAST=$HOME/.go_last
+
+  if [[ $# -eq 0 ]] || [[ $1 == "-h" ]]
+  then
+    echo "Usage: go [(number)] [-l] [-a (path)] [-r (number)] [-h]"
+    echo "    (number): cd to stored path with number"
+    echo "    -l: list stored bookmarks"
+    echo "    -a: store new path to navigate"
+    echo "    -s: save current location as bookmark"
+    echo "    -r: remove bookmark at given number"
+    echo "    -h: show this help"
+  elif [[ $1 == "-a" ]]
+  then
+    echo $2 >> $GO_HISTORY
+    echo `wc -l < $GO_HISTORY`
+  elif [[ $1 == "-s"  ]]
+  then
+    echo `pwd` >> $GO_HISTORY
+    echo `wc -l < $GO_HISTORY`
+  elif [[ $1 == "-l" ]]
+  then
+    i=1
+    while read line
+    do
+      echo $i":"$line
+      i=`expr $i + 1`
+    done <"$GO_HISTORY"
+  elif [[ $1 == "-r" ]]
+  then
+    gsed -i $2'd' $GO_HISTORY
+  elif [[ $1 == 'back' ]]
+  then
+    LAST=`pwd`
+    cd `cat $GO_LAST`
+    echo $LAST > $GO_LAST
+  elif [[ $1 -eq 0 ]]
+  then
+    :
+  else
+    i=1
+    while read line
+     do
+       lines[$i]="$line"
+       i=`expr $i + 1`
+     done <"$GO_HISTORY"
+     pwd > $GO_LAST
+     cd ${lines[$1]}
+  fi
+}
+
+fn() {
+    if test "$#" = 2; then
+        find . -iname $1 | head -n $2 | tail -n 1
+    elif test "$#" = 1;
+    then
+        find . -iname $1 | head -n 1
+    else
+        find . | head -n 1
+    fi
+}
+
+d() {
+    if test "$#" = 1; then
+        dia --export `basename -s .dia $1`.png $1 -t png-libart
+    else
+        echo "  Expected 1 arg (filename), got $#."
+    fi
+}
+
+ht() {
+    echo "tmux list-sessions, tmux attach -t name, tmux kill-session -t name, tmux source-file ~/.tmux.conf"
+}
+
+hf() {
+    echo "nc -vz 127.0.0.1 80"
+    echo 'wget "https://host:port/some/path/" --certificate=llv-test.pem'
+    echo "netstat -lntu"
+    echo "ssh -L 9443:localhost:9443 remote"
+    echo "(psql) \o file.txt (enter) query (enter) \o \q"
+    echo "(self-signed) openssl req -x509 -newkey rsa:2048 -keyout self.key -out self.pem -days 365"
+    echo "(check) openssl x509 -in self.pem -text -noout"
+    echo "(to p12) openssl pkcs12 -export -out self.p12 -inkey self.key -in self.pem"
+    echo "for d in * .go_history; do  echo -n $d \" \" ; git -C $d status | head -1;  done"
+    echo "while IFS= read -r line .go_history do echo $line ; done < file.txt"
+}
+
+notIn(){
+    if test "$#" = 2; then
+        grep -x -f $2 -v $1
+    else
+        echo "  Expected 2 arg (reference file, file to look into), got $#."
+    fi
+
+}
+
+ldir(){
+    for i in $(ls -d */); do echo ${i%%/}; done
+}
+
+dcb () {
+    id=$(docker ps --format "{{.ID}} {{.Names}}" | grep $1 | cut -d " " -f1)
+    docker exec -it $id /bin/sh
+}
+
+dslf (){
+  docker start $1
+  docker logs --follow $1
+}
+
+
+gmin () {
+   candidate=`git branch --show-current`
+   git checkout $1
+   git merge $candidate
+}
+
+grin () {
+  candidate=`git branch --show-current`
+  git rebase -i $1 $candidate
+}
+gsl() {
+  if [[ $# -eq 1 ]]
+  then
+    git log --source -S $1
+  elif [[ $# -eq 2 ]]
+  then
+    git log --follow --source -S $1 -- $2
+  elif
+  then
+    print "<text to search> [file path within repo]"
+  fi
+}
+
+h() {
+    echo "Custom Commands:"
+    echo "  .. n                 ->  go up 1 or n directories"
+    echo "  d {file}             ->  export given .dia file to png"
+    echo "  dcb {name}           ->  start bash / connect to docker image with given name"
+    echo "  dslf {name}          ->  start docker container and follow logs"
+    echo "  fn {expr} n          ->  like 'f', but return only the n-th result (default: 1st)"
+    echo "  gmin {identifier}    ->  merge (identifier) into current branch"
+    echo "  grin {identifier}    ->  rebase (identifier) onto current branch"
+    echo "  go {n}               ->  go to bookmarked location n"
+    echo "  gsl <text> {file}    ->  serch (current) git repo history for change, optionally limit to file"
+    echo "  ht                   ->  show tmux (un)common commands"
+    echo "  hf                   ->  show some commands I never quite remember the ordering"
+    echo "  ldir                 -> list directories in current dir"
+    echo "  ma                   ->  show (m)y (a)liases, mostly short-hands of common commands"
+    echo "  notIn file otherFile ->  find lines given by 'file' not in 'otherFile'"
+}

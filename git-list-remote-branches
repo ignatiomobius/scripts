@@ -1,6 +1,0 @@
-#!/bin/bash
-for arg in "$@"
-do
-	git branch -r | grep $arg/
-done
-

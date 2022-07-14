@@ -1,0 +1,89 @@
+# h = show bash helper commands (e.g., go fn, ma)
+# convenience commands
+alias c='clear'
+alias cls='c;ls'
+alias cl='c;l'
+alias ct='cd; clear'
+alias cg='clear; go'
+alias ci='centerim'
+alias duh='du -lh --max-depth=1'
+alias d0='du -lh --max-depth=0'
+alias t='tmux'
+alias e='evince'
+alias v='vim'
+alias f='find . -iname'
+alias p='plantuml'
+alias u='uptime'
+alias m='mkdir'
+
+alias tview='tar -ztvf'
+alias tarchive='tar -cvzf'
+alias textract='tar -xvzf'
+
+# ls
+alias l='ls -1'
+alias la='ls-l -A'
+alias ll='ls -1 -A | less'
+alias lsg='ls | grep'
+alias ag='grep -rnw . -e'
+
+#git
+alias gf="git fetch"
+alias gfa="git fetch --all"
+alias gp="git pull"
+alias gph="git push origin HEAD"
+alias gpt="git push origin HEAD --tags"
+alias gphf="git push origin HEAD --force-with-lease"
+alias g="git status"
+alias gc="git commit -m"
+alias gca="git commit --amend"
+alias ga="git add -A"
+alias gmt="git mergetool"
+alias gcf="git clean -f"
+alias grc="git rebase --continue"
+alias gback="git reset --hard HEAD"
+alias gundo="git reset --hard HEAD~"
+alias gl="git log --graph --oneline --all -n 20"
+alias gll="git log --graph --oneline --all -n 50"
+alias gla="git log --graph --oneline --all"
+alias gd="git diff -w"
+alias qa="qgit --all &"
+alias gb="git branch"
+alias gdel="git branch -D"
+alias grpo="git remote prune origin"
+alias gco="git checkout"
+alias gundo="git reset --hard HEAD~1"
+alias gri="git rebase -i"
+alias gcfd="git clean -fd"
+
+# git & maven documentary
+# alias guntrack="git update-index --assume-unchanged"
+# alias gretrack="git update-index --no-assume-unchanged"
+# alias mcip="mvn clean install -pl"
+# alias mrel="mvn release:prepare -DautoVersionSubmodules=true -DpushChanges=false"
+
+#settings
+alias br="vim ~/.zshrc"
+alias bf="vim ~/.bash_functions"
+alias ba="vim ~/.bash_aliases"
+alias bu="source ~/.zshrc"
+alias ma="less ~/.bash_aliases"
+
+# maven
+alias mci="mvn clean install"
+alias mcio="mvn clean install -o"
+alias mcis="mvn clean install -DskipTests"
+alias mut="mvn surefire:test"
+alias mit="mvn failsafe:integration-test"
+alias mat="mvn surefire:test failsafe:integration-test"
+alias mtest="mvn test -PskipDependencyCheck -Dtest=*$*"
+alias mdt="mvn dependency:tree"
+
+# docker
+alias dps="docker ps --format \"{{.ID}} {{.Names}}\""
+alias dpsit="docker ps --format \"{{.ID}} {{.Names}}\" | grep"
+alias dis="docker inspect"
+alias dlo="docker logs"
+alias dcu="docker-compose up"
+alias dlf="docker logs --follow"
+
