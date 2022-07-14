@@ -1,2 +1,2 @@
 #!/bin/sh
-python days.py
+python3 days.py

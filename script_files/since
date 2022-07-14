@@ -1,2 +1,2 @@
 #!/bin/sh
-python until_today.py
+python3 until_today.py

@@ -5,4 +5,4 @@ today = datetime.datetime.today()
 
 diff = (today - start).days
 
-print diff
+print(diff)
