@@ -1,3 +1,38 @@
+function .. (){
+  local arg=${1:-1};
+  local dir=""
+  while [ $arg -gt 0 ]; do
+    dir="../$dir"
+    arg=$(($arg - 1));
+  done
+  cd $dir #>&/dev/null
+}
+
+gcd()
+{
+    ./gradlew dependencies -p $1 --configuration compileClasspath
+}
+
+gdeps()
+{
+    ./gradlew dependencies -p $1 --configuration $2
+}
+
+psig()
+{
+    ps -x -o pid -o comm  | grep -v grep | grep -i $1 | cut -f 1 -w
+}
+
+psigk()
+{
+    ps -x -o pid -o comm  | grep -v grep | grep -i $1 | cut -f 1 -w | while read i; do kill -9 $i ; done
+}
+
+aprofset()
+{
+    AWS_PROFILE=$1
+}
+
 utf8()
 {
     iconv -f ISO-8859-1 -t UTF-8 $1 > $1.tmp
@@ -5,15 +40,6 @@ utf8()
     mv $1.tmp $1
 }
 
-function .. (){
-  local arg=${1:-1};
-  local dir=""
-  while [ $arg -gt 0 ]; do
-dir="../$dir"
-    arg=$(($arg - 1));
-  done
-cd $dir #>&/dev/null
-}
 
 function go (){
 
@@ -79,14 +105,6 @@ fn() {
     fi
 }
 
-d() {
-    if test "$#" = 1; then
-        dia --export `basename -s .dia $1`.png $1 -t png-libart
-    else
-        echo "  Expected 1 arg (filename), got $#."
-    fi
-}
-
 ht() {
     echo "tmux list-sessions, tmux attach -t name, tmux kill-session -t name, tmux source-file ~/.tmux.conf"
 }
@@ -127,17 +145,17 @@ dslf (){
   docker logs --follow $1
 }
 
-
 gmin () {
-   candidate=`git branch --show-current`
+   current=`git branch --show-current`
    git checkout $1
-   git merge $candidate
+   git merge $current
 }
 
 grin () {
-  candidate=`git branch --show-current`
-  git rebase -i $1 $candidate
+  current=`git branch --show-current`
+  git rebase -i $1 $current
 }
+
 gsl() {
   if [[ $# -eq 1 ]]
   then
@@ -154,17 +172,22 @@ gsl() {
 h() {
     echo "Custom Commands:"
     echo "  .. n                 ->  go up 1 or n directories"
+    echo "  bu                   ->  reload ~/.zshrc"
     echo "  d {file}             ->  export given .dia file to png"
     echo "  dcb {name}           ->  start bash / connect to docker image with given name"
     echo "  dslf {name}          ->  start docker container and follow logs"
-    echo "  fn {expr} n          ->  like 'f', but return only the n-th result (default: 1st)"
-    echo "  gmin {identifier}    ->  merge (identifier) into current branch"
-    echo "  grin {identifier}    ->  rebase (identifier) onto current branch"
+    echo "  ea / ef / er         ->  (e)dit (a)liases / (f)unctions / zsh(r)c"
+    echo "  fn {expr} {n}        ->  like 'f', but return only the n-th result (default: 1st)"
+    echo "  gcd {path}           ->  show (gradle) compile dependencies of path"
+    echo "  gcd {path} {config}  ->  show (gradle) <config> dependencies of path"
+    echo "  gmin {identifier}    ->  merge current branch into (identifier)"
+    echo "  grin {identifier}    ->  rebase current branch onto (identifier)"
     echo "  go {n}               ->  go to bookmarked location n"
-    echo "  gsl <text> {file}    ->  serch (current) git repo history for change, optionally limit to file"
+    echo "  gsl {text} {file}    ->  serch (current) git repo history for change, optionally limit to file"
     echo "  ht                   ->  show tmux (un)common commands"
     echo "  hf                   ->  show some commands I never quite remember the ordering"
-    echo "  ldir                 -> list directories in current dir"
-    echo "  ma                   ->  show (m)y (a)liases, mostly short-hands of common commands"
-    echo "  notIn file otherFile ->  find lines given by 'file' not in 'otherFile'"
+    echo "  ldir                 ->  list directories in current dir"
+    echo "  ma / mf / mr         ->  show (m)y (a)liases / (f)unctions / zsh(r)c"
+    echo "  notIn {file} {other} ->  find lines given by 'file' not in 'other'"
+    echo "  psig {name}          ->  show PIDs of processes containing 'name'"
 }

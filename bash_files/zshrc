@@ -1,0 +1,30 @@
+#export PATH="/usr/local/opt/openjdk@11/bin:${PATH}"
+export PATH="/Users/moebius/scripts:${PATH}"
+export PATH="/opt/homebrew/opt/python/bin/:${PATH}"
+export PATH="/Users/moebius/.cargo/bin/:${PATH}"
+export PATH="/Users/moebius/.pyenv/shims:${PATH}"
+
+if [ -f ~/.bash_functions ]; then
+    . ~/.bash_functions
+fi
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# Load version control information
+autoload -Uz vcs_info
+precmd() { vcs_info }
+
+# Format the vcs_info_msg_0_ variable
+zstyle ':vcs_info:git:*' formats '[%b] '
+ 
+# Set up the prompt (with git branch name)
+setopt PROMPT_SUBST
+PROMPT='%n ${PWD/#$HOME/~} ${vcs_info_msg_0_}'
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
